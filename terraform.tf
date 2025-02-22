@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-east-1" 
+  region = "var.region" 
   
 }
 
@@ -99,7 +99,7 @@ resource "aws_route_table_association" "private_route_association" {
 
 terraform {
   backend "s3" {
-    bucket         = "venu_hcl_hackthon"  
+    bucket         = "var.bucket"  
     key            = "path/to/your/terraform/statefile.tfstate"
     region         = "us-east-1"   # AWS region where the bucket is located
     encrypt        = true  # Encrypt the state file in S3
