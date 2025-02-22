@@ -30,6 +30,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+            terraform_version: "1.10.5"  # Or any version you want
+
+
       # Install the latest version of Terraform CLI and configure it with the Terraform Cloud user API token
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
