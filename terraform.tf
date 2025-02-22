@@ -96,8 +96,8 @@ resource "aws_route_table_association" "private_route_association" {
 
 terraform {
   backend "s3" {
-    bucket         = "var.bucket"  
-    key            = "path/to/your/terraform/statefile.tfstate"
+    bucket         = "venuking37512345"  
+    key            = "terraform/statefile.tfstate"
     region         = "us-east-1"   # AWS region where the bucket is located
     encrypt        = true  # Encrypt the state file in S3
     dynamodb_table  = "your-dynamodb-lock-table"  
