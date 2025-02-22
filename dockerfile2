@@ -1,0 +1,20 @@
+# Use Node.js official image as a base image
+FROM node:16
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy both package.json and package-lock.json to the container
+COPY appointment*.json ./
+
+# Install dependencies based on package-lock.json
+RUN npm install
+
+# Copy the rest of the application code
+COPY . .
+
+# Expose the application port (if relevant)
+EXPOSE 3000
+
+# Start the app (replace with your app's start command)
+CMD ["npm", "start"]
