@@ -1,0 +1,68 @@
+name: Node.js CI/CD with Docker, SonarQube, and Trivy
+
+on:
+  push:
+    branches:
+      - main  # Trigger on push to the main branch
+  pull_request:
+    branches:
+      - main  # Trigger on PR to the main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # The runner environment for the job
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'  # Specify the Node.js version
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Run SonarQube Scanner (code quality and security)
+      - name: Run SonarQube scan
+        env:
+          SONARQUBE_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}  # Set SonarQube token as a secret
+        run: |
+          curl -sSLo sonarqube-scanner-cli.jar https://github.com/SonarSource/sonar-scanner-cli/releases/download/4.6.2.2472/sonar-scanner-cli-4.6.2.2472-linux.zip
+          unzip sonar-scanner-cli.zip -d /opt/sonar-scanner
+          /opt/sonar-scanner/sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner \
+            -Dsonar.projectKey=my-nodejs-app \
+            -Dsonar.host.url=https://sonarqube.example.com \
+            -Dsonar.login=$SONARQUBE_TOKEN
+
+      # Step 5: Run tests (Optional)
+      - name: Run tests
+        run: npm test
+
+      # Step 6: Create a Docker image for the application
+      - name: Build Docker image
+        run: |
+          docker build -t myusername/my-nodejs-app:$GITHUB_SHA .
+
+      # Step 7: Scan Docker image with Trivy
+      - name: Scan Docker image with Trivy
+        run: |
+          curl -sfL https://github.com/aquasecurity/trivy/releases/download/v0.21.2/trivy_0.21.2_Linux-64bit.deb -o trivy.deb
+          sudo dpkg -i trivy.deb
+          trivy image --no-progress myusername/my-nodejs-app:$GITHUB_SHA
+
+      # Step 8: Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}  # Docker Hub username
+          password: ${{ secrets.DOCKER_PASSWORD }}  # Docker Hub password (set as a secret)
+
+      # Step 9: Push Docker image to Docker Hub
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker push myusername/my-nodejs-app:$GITHUB_SHA
