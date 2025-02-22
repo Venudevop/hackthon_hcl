@@ -187,3 +187,43 @@ resource "aws_ec2_instance" "ec2_instance_2" {
 
 
 
+#######Fargate#############
+
+# Define ECS Cluster
+resource "aws_ecs_cluster" "fargate_cluster" {
+  name = "fargate-cluster"
+}
+
+# Define ECS Task Definition
+resource "aws_ecs_task_definition" "fargate_task" {
+  family                = "my-task-family"
+  execution_role_arn    = aws_iam_role.ecs_task_execution_role.arn
+  task_role_arn         = aws_iam_role.ecs_task_role.arn
+  requires_compatibilities = ["FARGATE"]
+  network_mode          = "awsvpc"
+  container_definitions = jsonencode([{
+    name      = "my-container"
+    image     = "my-ecr-repo/my-app-image:latest"
+    cpu       = 256
+    memory    = 512
+    portMappings = [{
+      containerPort = 80
+      hostPort      = 80
+      protocol      = "tcp"
+    }]
+  }])
+}
+
+# Define ECS Service
+resource "aws_ecs_service" "fargate_service" {
+  name            = "fargate-service"
+  cluster         = aws_ecs_cluster.fargate_cluster.id
+  task_definition = aws_ecs_task_definition.fargate_task.arn
+  desired_count   = 2
+  launch_type     = "FARGATE"
+  network_configuration {
+    subnets          = [aws_subnet.private_subnet.id]
+    security_groups = [aws_security_group.ecs_security_group.id]
+    assign_public_ip = true
+  }
+}
