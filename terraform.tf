@@ -65,7 +65,7 @@ resource "aws_route_table_association" "public_route_association" {
 #}
 
 resource "aws_nat_gateway" "nat_gateway" {
-  allocation_id = aws_eip.nat_ip.id
+#  allocation_id = aws_eip.nat_ip.id
   subnet_id     = aws_subnet.public_subnet.id  # NAT Gateway must be in the public subnet
 
   tags = {
@@ -139,7 +139,7 @@ data "aws_availability_zones" "available" {}
 resource "aws_instance" "ec2_instance_1" {
   ami           = "ami-0c55b159cbfafe1f0"  # Replace with your desired AMI ID
   instance_type = "t2.medium"
-  iam_instance_profile = aws_iam_role.ec2_role.name
+ # iam_instance_profile = aws_iam_role.ec2_role.name
   security_groups = [aws_security_group.ec2_sg.name]
   subnet_id      = "aws_subnet.public_subnet.id"  # Replace with your subnet ID in AZ 1
   key_name       = "var.keyname"  # Replace with your EC2 key pair name
@@ -154,7 +154,7 @@ resource "aws_instance" "ec2_instance_1" {
 resource "aws_instance" "ec2_instance_2" {
   ami           = "var.image.id"  # Replace with your desired AMI ID
   instance_type = "t2.micro"
-  iam_instance_profile = aws_iam_role.ec2_role.name
+ # iam_instance_profile = aws_iam_role.ec2_role.name
   security_groups = [aws_security_group.ec2_sg.name]
   subnet_id      = "subnet-id-2"  # Replace with your subnet ID in AZ 2
   key_name       = "your-key-name"  # Replace with your EC2 key pair name
@@ -177,8 +177,8 @@ resource "aws_ecs_cluster" "fargate_cluster" {
 # Define ECS Task Definition
 resource "aws_ecs_task_definition" "fargate_task" {
   family                = "my-task-family"
-  execution_role_arn    = aws_iam_role.ecs_task_execution_role.arn
-  task_role_arn         = aws_iam_role.ecs_task_role.arn
+ # execution_role_arn    = aws_iam_role.ecs_task_execution_role.arn
+ # task_role_arn         = aws_iam_role.ecs_task_role.arn
   requires_compatibilities = ["FARGATE"]
   network_mode          = "awsvpc"
   container_definitions = jsonencode([{
