@@ -60,9 +60,9 @@ resource "aws_route_table_association" "public_route_association" {
 }
 
 # Create a NAT Gateway (Optional, for Private Subnet internet access)
-resource "aws_eip" "nat_ip" {
-  vpc = true
-}
+#resource "aws_eip" "nat_ip" {
+  #vpc = true
+#}
 
 resource "aws_nat_gateway" "nat_gateway" {
   allocation_id = aws_eip.nat_ip.id
@@ -109,23 +109,7 @@ terraform {
 
 ####################################
 
-# Create IAM Role for EC2 Instances
-resource "aws_iam_role" "ec2_role" {
-  name = "ec2-role-for-instances"
 
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
-      }
-    ]
-  })
-}
 
 # Create Security Group to Allow All IPs
 resource "aws_security_group" "ec2_sg" {
@@ -152,7 +136,7 @@ resource "aws_security_group" "ec2_sg" {
 data "aws_availability_zones" "available" {}
 
 # Launch EC2 Instance 1 in the first Availability Zone
-resource "aws_ec2_instance" "ec2_instance_1" {
+resource "aws_instance" "ec2_instance_1" {
   ami           = "ami-0c55b159cbfafe1f0"  # Replace with your desired AMI ID
   instance_type = "t2.medium"
   iam_instance_profile = aws_iam_role.ec2_role.name
@@ -167,7 +151,7 @@ resource "aws_ec2_instance" "ec2_instance_1" {
 }
 
 # Launch EC2 Instance 2 in the second Availability Zone
-resource "aws_ec2_instance" "ec2_instance_2" {
+resource "aws_instance" "ec2_instance_2" {
   ami           = "var.image.id"  # Replace with your desired AMI ID
   instance_type = "t2.micro"
   iam_instance_profile = aws_iam_role.ec2_role.name
