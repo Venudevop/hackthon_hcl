@@ -45,7 +45,7 @@ jobs:
 
       # Generate an execution plan for Terraform
       - name: Terraform Plan
-        run: terraform plan
+        run: terraform plan -lock=false
 
       # Apply the Terraform configuration when pushing to the 'main' branch
       - name: Terraform Apply
