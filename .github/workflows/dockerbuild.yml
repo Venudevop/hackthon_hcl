@@ -30,7 +30,7 @@ jobs:
         with:
           context: .  # Use the current directory as the context
           push: true  # Push the image to Docker Hub after build
-          tags: ${{ secrets.DOCKER_USERNAME }}/HCL:latest  # Replace with your image name and tag
+          tags: ${{ secrets.DOCKER_USERNAME }}/hcl:latest  # Replace with your image name and tag
           
       - name: Logout from Docker Hub
         run: docker logout  # Logout from Docker Hub to clean up after the build
