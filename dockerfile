@@ -5,13 +5,10 @@ FROM node:16
 WORKDIR /app
 
 # Copy both package.json and package-lock.json to the container
-COPY patient*.json ./
+COPY patient*.js ./
 
 # Install dependencies based on package-lock.json
 RUN npm install
-
-# Copy the rest of the application code
-COPY . .
 
 # Expose the application port (if relevant)
 EXPOSE 3000
