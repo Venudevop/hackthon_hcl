@@ -19,7 +19,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2  # Set up Node.js for the job
         with:
-          node-version: '14'  # You can change the version based on your app's requirements
+          node-version: '16'  # You can change the version based on your app's requirements
 
       - name: Install dependencies
         run: npm install  # 
