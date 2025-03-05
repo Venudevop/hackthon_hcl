@@ -33,7 +33,7 @@ jobs:
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v1
         with:
-            terraform_version: "1.10.5"  # Or any version you wan
+            terraform_version: "~> 5.0"  # Or any version you wan
 
       # Initialize a new or existing Terraform working directory
       - name: Terraform Init
