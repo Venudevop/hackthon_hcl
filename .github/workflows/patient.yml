@@ -1,12 +1,12 @@
 name: Node.js CI/CD with Docker, SonarQube, and Trivy
 
-on:
-  push:
-    branches:
-      - main  # Trigger on push to the main branch
-  pull_request:
-    branches:
-      - main  # Trigger on PR to the main branch
+#on:
+#  push:
+ #   branches:
+  #    - main  # Trigger on push to the main branch
+#  pull_request:
+ #   branches:
+  #    - main  # Trigger on PR to the main branch
 
 jobs:
   build:
